@@ -29,13 +29,13 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/server/simple_action_server.h>
 
-#include <navigation_step/DestAction.h>
-#include <navigation_step/SetOrientation.h>
-#include <navigation_step/BasePoint.h>
-#include <navigation_step/PointData.h>
-#include <navigation_step/Manual.h>
-#include <navigation_step/Twist.h>
-#include <navigation_step/Dict.h>
+#include <youbot_navigation/DestAction.h>
+#include <youbot_navigation/SetOrientation.h>
+#include <youbot_navigation/BasePoint.h>
+#include <youbot_navigation/PointData.h>
+#include <youbot_navigation/Manual.h>
+#include <youbot_navigation/Twist.h>
+#include <youbot_navigation/Dict.h>
 
 class Navi
 {
@@ -64,8 +64,8 @@ class Navi
         std::fstream dict_fs;
 
         // ACTIONLIB used to communicate with CONTROL_NODE
-        actionlib::SimpleActionServer<navigation_step::DestAction> dest_as;
-        void execute_cb(const navigation_step::DestGoalConstPtr&);        // &goal??
+        actionlib::SimpleActionServer<youbot_navigation::DestAction> dest_as;
+        void execute_cb(const youbot_navigation::DestGoalConstPtr&);        // &goal??
         std::string dest_as_name;
 
         //ACTIONLIB client for move_base
@@ -84,12 +84,12 @@ class Navi
 
         bool stop_cb (std_srvs::Empty::Request&, std_srvs::Empty::Response&);
         bool mode_cb (std_srvs::Empty::Request&, std_srvs::Empty::Response&);
-        bool set_orientation_cb (navigation_step::SetOrientation::Request&, navigation_step::SetOrientation::Response&);
-        //bool set_twist_cb (navigation_step::Twist::Request&, navigation_step::Twist::Response&);
-        bool manual_cb (navigation_step::Manual::Request&, navigation_step::Manual::Response&);
-        bool dict_cb (navigation_step::Dict::Request&, navigation_step::Dict::Response&);
+        bool set_orientation_cb (youbot_navigation::SetOrientation::Request&, youbot_navigation::SetOrientation::Response&);
+        //bool set_twist_cb (youbot_navigation::Twist::Request&, youbot_navigation::Twist::Response&);
+        bool manual_cb (youbot_navigation::Manual::Request&, youbot_navigation::Manual::Response&);
+        bool dict_cb (youbot_navigation::Dict::Request&, youbot_navigation::Dict::Response&);
         bool point_catcher_cb (std_srvs::Empty::Request&, std_srvs::Empty::Response&);
-        bool point_catcher_base_cb (navigation_step::BasePoint::Request&, navigation_step::BasePoint::Response&);
+        bool point_catcher_base_cb (youbot_navigation::BasePoint::Request&, youbot_navigation::BasePoint::Response&);
 
         ros::Publisher twist_pub;
         geometry_msgs::Twist twist_msg;

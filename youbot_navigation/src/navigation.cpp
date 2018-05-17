@@ -28,16 +28,16 @@ Navi::Navi(std::string node_name): nh_("~"),
 
     point_catcher_base_srv = nh_.advertiseService("point_catcher_base",&Navi::point_catcher_base_cb, this);
     point_catcher_srv = nh_.advertiseService("point_catcher",&Navi::point_catcher_cb, this);
-    point_catcher_cli = nh_.serviceClient<navigation_step::PointData>("point_data");
+    point_catcher_cli = nh_.serviceClient<youbot_navigation::PointData>("point_data");
 
     mode = 0x00;
     if (init_dict_load()) mode |= ld_pnts;
 }
 
-void Navi::execute_cb(const navigation_step::DestGoalConstPtr &goal)
+void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
 {
 
-    navigation_step::DestResult result;
+    youbot_navigation::DestResult result;
     result.has_got = false;
     ros::Rate r(4);
 
@@ -173,8 +173,8 @@ void Navi::execute_cb(const navigation_step::DestGoalConstPtr &goal)
 }
 
 
-// bool Navi::set_twist_cb (navigation_step::Twist::Request&  req,
-//                          navigation_step::Twist::Response& res)
+// bool Navi::set_twist_cb (youbot_navigation::Twist::Request&  req,
+//                          youbot_navigation::Twist::Response& res)
 // {
 //     if ((mode & move_to_point) == move_to_point) {
 //         ROS_INFO("[Navi]: Somebody's trying to move base while move_base work.");
@@ -196,7 +196,7 @@ bool Navi::point_catcher_cb (std_srvs::Empty::Request&  req,
 {
     if ((mode & manual) == manual)
     {
-        navigation_step::PointData srv;
+        youbot_navigation::PointData srv;
         if (point_catcher_cli.call(srv))
         {
             tf::TransformListener listener;
@@ -239,8 +239,8 @@ bool Navi::point_catcher_cb (std_srvs::Empty::Request&  req,
 
 }
 
-bool Navi::point_catcher_base_cb (navigation_step::BasePoint::Request&  req,
-                                  navigation_step::BasePoint::Response& res)
+bool Navi::point_catcher_base_cb (youbot_navigation::BasePoint::Request&  req,
+                                  youbot_navigation::BasePoint::Response& res)
 {
     if ((mode & manual) == manual)
     {
@@ -273,8 +273,8 @@ bool Navi::point_catcher_base_cb (navigation_step::BasePoint::Request&  req,
 
 }
 
-bool Navi::set_orientation_cb (navigation_step::SetOrientation::Request&  req,
-                               navigation_step::SetOrientation::Response& res)
+bool Navi::set_orientation_cb (youbot_navigation::SetOrientation::Request&  req,
+                               youbot_navigation::SetOrientation::Response& res)
 {
     if ((mode & manual) == manual)
     {
@@ -319,8 +319,8 @@ bool Navi::mode_cb (std_srvs::Empty::Request&  req,
 //As an argument function can get one of this strings:
 // current / new / reserve / movement_only
 //To turn it off call "stop" service
-bool Navi::manual_cb (navigation_step::Manual::Request&  req,
-                      navigation_step::Manual::Response& res)
+bool Navi::manual_cb (youbot_navigation::Manual::Request&  req,
+                      youbot_navigation::Manual::Response& res)
 {
     //checking for collision of the modes
     if (((mode & move_to_point) == move_to_point) || ((mode & twisting) == twisting))
@@ -471,8 +471,8 @@ bool Navi::stop_cb (std_srvs::Empty::Request&  req,
     return true;
 }
 
-bool Navi::dict_cb (navigation_step::Dict::Request&  req,
-                    navigation_step::Dict::Response& res)
+bool Navi::dict_cb (youbot_navigation::Dict::Request&  req,
+                    youbot_navigation::Dict::Response& res)
 {
     ROS_INFO("[Navi]: Reloading dictionary..");
     if (req.dict == "main") {
@@ -506,7 +506,7 @@ bool Navi::init_dict_load()
 {
     std::string line;
     //Попытка найти словарь в соответствующей директории пакета.
-    std::regex reg("/home/ub/uws/src/navigation_step", std::regex_constants::ECMAScript |
+    std::regex reg("/home/ub/uws/src/youbot_navigation", std::regex_constants::ECMAScript |
                                   std::regex_constants::icase);
     std::smatch res;
     std::string pac_path = std::getenv("ROS_PACKAGE_PATH");

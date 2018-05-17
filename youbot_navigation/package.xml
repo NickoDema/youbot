@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>youbot_navigation_red</name>
+  <name>youbot_navigation</name>
   <version>0.1.0</version>
   <description>youbot navigation</description>
 
