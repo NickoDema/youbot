@@ -13,3 +13,4 @@ From root directory of the *youbot* package:
 
     sudo ./sensors_setup/lidar/udev_hokuyo_configuration.sh
 
+Plug your hokuyo scanners one by one and check the corresponding *serial numbers* in */dev/sensors* directory. Set this serial numbers in *sensor_setup/launch/hokuyo.launch*
