@@ -1,0 +1,17 @@
+<launch>
+
+  <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node">
+    <param name="port" type="string" value="/dev/serial/by-id/usb-Hokuyo_Data_Flex_for_USB_URG-Series_USB_Driver-if00"/>
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher" name="lidar_frame" args="0.325 0 0 0 0 0 /base_link /laser 50" />
+
+  <!-- map_server wiht pre-recorded map -->
+  <node name="map_server" type="map_server" pkg="map_server" args="$(find navigation_step)/map/map.yaml" />
+
+  <node pkg="amcl" type="amcl" name="amcl">
+    <rosparam file="$(find navigation_step)/config/amcl_params.yaml" command="load" />
+    <!--<remap from="scan" to="/vrep/scan"/>-->
+  </node>
+
+</launch>

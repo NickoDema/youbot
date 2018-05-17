@@ -1,0 +1,12 @@
+#goal definition
+string task 
+string target_point
+string orientation
+uint32 duration
+geometry_msgs/Pose2D dist
+---
+#result definition
+bool has_got
+---
+#feedback
+geometry_msgs/Pose2D to_pnt
