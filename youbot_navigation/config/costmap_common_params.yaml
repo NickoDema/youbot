@@ -10,16 +10,25 @@ obstacle_layer:
     combination_method: 1
     track_unknown_space: false
 
-    observation_sources: scan
-    scan: {sensor_frame: laser,
-            data_type: LaserScan,
-            topic: /scan,
-            expected_update_rate: 0.3,
-            observation_persistence: 0.0,
-            marking: true,
-            clearing: true,
-            min_obstacle_height: -0.10,
-            max_obstacle_height: 2.0}
+    observation_sources: front_scan rear_scan
+    front_scan: { sensor_frame: front_laser,
+                  data_type: LaserScan,
+                  topic: /scan,
+                  expected_update_rate: 0.3,
+                  observation_persistence: 0.0,
+                  marking: true,
+                  clearing: true,
+                  min_obstacle_height: -0.10,
+                  max_obstacle_height: 2.0}
+    rear_scan: { sensor_frame: rear_laser,
+                data_type: LaserScan,
+                topic: /scan_r,
+                expected_update_rate: 0.3,
+                observation_persistence: 0.0,
+                marking: true,
+                clearing: true,
+                min_obstacle_height: -0.10,
+                max_obstacle_height: 2.0}
 
 inflation_layer:
     enabled: true
