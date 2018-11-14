@@ -1,0 +1,13 @@
+<!-- Launches all nodes required to accomplish Basic Navigation Test -->
+
+<launch>
+
+	<!-- move_base with params -->
+	<include file="$(find youbot_navigation)/launch/move_base_teb.launch" />
+
+	<!-- AMCL -->
+	<include file="$(find youbot_navigation)/launch/amcl_h.launch" />
+
+  <node pkg="youbot_navigation" type="navi_node" name="navi" output="screen"/>
+
+</launch>

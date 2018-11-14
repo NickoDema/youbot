@@ -79,6 +79,7 @@ class Navi
         ros::ServiceServer mode_srv;
 
         ros::ServiceClient point_catcher_cli;
+        ros::ServiceClient costmap_clearer_cli;
         ros::ServiceServer point_catcher_srv;
         ros::ServiceServer point_catcher_base_srv;
 

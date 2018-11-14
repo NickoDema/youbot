@@ -29,6 +29,7 @@ Navi::Navi(std::string node_name): nh_("~"),
     point_catcher_base_srv = nh_.advertiseService("point_catcher_base",&Navi::point_catcher_base_cb, this);
     point_catcher_srv = nh_.advertiseService("point_catcher",&Navi::point_catcher_cb, this);
     point_catcher_cli = nh_.serviceClient<youbot_navigation::PointData>("point_data");
+    costmap_clearer_cli = nh_.serviceClient<std_srvs::Empty>("move_base_node/clear_costmaps");
 
     mode = 0x00;
     if (init_dict_load()) mode |= ld_pnts;
@@ -41,6 +42,7 @@ void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
     result.has_got = false;
     ros::Rate r(4);
 
+    int j=0;
     while(!move_base_ac.waitForServer(ros::Duration(5.0)))
     {
         if(dest_as.isPreemptRequested())
@@ -49,6 +51,8 @@ void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
             break;
         }
         ROS_INFO("Waiting for the move_base action server to come up");
+        if (j > 12) break;
+        j++;
     }
     if (!move_base_ac.isServerConnected())
     {
@@ -66,6 +70,11 @@ void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
 
         if (goal->task == "point")
         {
+          std_srvs::Empty empt_msg;
+          if (!costmap_clearer_cli.call(empt_msg))
+          {
+            ROS_INFO("Can't call costmap clearer before goal sending");
+          }
             goal_mb.target_pose.pose.position.x = points[goal->target_point].first;
             goal_mb.target_pose.pose.position.y = points[goal->target_point].second;
             goal_mb.target_pose.pose.orientation = tf::createQuaternionMsgFromYaw(points[goal->orientation].first);
@@ -127,7 +136,7 @@ void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
             dest_as.setAborted(result);
             completed = true;
         }
-        ROS_INFO("5");
+        //ROS_INFO("5");
 
         move_base_ac.sendGoal(goal_mb);
         actionlib::SimpleClientGoalState state_ac = move_base_ac.getState();
@@ -140,10 +149,10 @@ void Navi::execute_cb(const youbot_navigation::DestGoalConstPtr &goal)
                 dest_as.setPreempted(result);
                 ROS_INFO("%s: Preempted/Canceled", dest_as_name.c_str());
                 completed = true;
-	    		twist_msg.linear.x = 0;
-	    		twist_msg.linear.y = 0;
-	    		twist_msg.angular.z = 0;
-	    		twist_pub.publish(twist_msg);
+	              twist_msg.linear.x = 0;
+	              twist_msg.linear.y = 0;
+	              twist_msg.angular.z = 0;
+	              twist_pub.publish(twist_msg);
             }
 
             state_ac = move_base_ac.getState();
@@ -506,7 +515,7 @@ bool Navi::init_dict_load()
 {
     std::string line;
     //Попытка найти словарь в соответствующей директории пакета.
-    std::regex reg("/home/ub/uws/src/youbot_navigation", std::regex_constants::ECMAScript |
+    std::regex reg("/home/ub/dema_ws/src/youbot/youbot_navigation", std::regex_constants::ECMAScript |
                                   std::regex_constants::icase);
     std::smatch res;
     std::string pac_path = std::getenv("ROS_PACKAGE_PATH");
