@@ -1,23 +1,20 @@
 <launch>
 
-  <!-- <node name="hokuyo" pkg="hokuyo_node" type="hokuyo_node">
-    <param name="port" type="string" value="/dev/serial/by-id/usb-Hokuyo_Data_Flex_for_USB_URG-Series_USB_Driver-if00"/>
-  </node> -->
-
   <node name="front_laser" pkg="hokuyo_node" type="hokuyo_node">
-		<param name="port" type="string" value="/dev/sensors/hokuyo_H1214084" />
+		<!-- <param name="port" type="string" value="/dev/sensors/hokuyo_H1214084" /> -->
+    <param name="port" type="string" value="/dev/serial/by-id/usb-Hokuyo_Data_Flex_for_USB_URG-Series_USB_Driver-if00"/>
     <param name="frame_id" type="string" value="front_laser" />
 	</node>
 
   <node pkg="tf" type="static_transform_publisher" name="front_laser_frame" args="0.325 0 0 1 0 0 0 /base_link /front_laser 20" />
 
-  <node name="rear_laser" pkg="hokuyo_node" type="hokuyo_node">
+  <!-- <node name="rear_laser" pkg="hokuyo_node" type="hokuyo_node">
     <param name="port" type="string" value="/dev/sensors/hokuyo_H1520031" />
     <param name="frame_id" type="string" value="rear_laser" />
     <remap from="scan" to="scan_r" />
   </node>
 
-  <node pkg="tf" type="static_transform_publisher" name="rear_laser_frame" args="-0.325 0 0 0 1 0 0 /base_link /rear_laser 20" />
+  <node pkg="tf" type="static_transform_publisher" name="rear_laser_frame" args="-0.325 0 0 0 1 0 0 /base_link /rear_laser 20" /> -->
 
   <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
     <rosparam file="$(find youbot_navigation)/config/gmapping_params.yaml" command="load" />

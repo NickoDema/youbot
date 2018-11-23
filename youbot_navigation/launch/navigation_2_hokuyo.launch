@@ -1,0 +1,44 @@
+<launch>
+
+  <node name="front_laser" pkg="hokuyo_node" type="hokuyo_node">
+    <param name="port" type="string" value="/dev/sensors/hokuyo_H1214084" />
+    <param name="frame_id" type="string" value="front_laser" />
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher" name="front_laser_frame" args="0.325 0 0 1 0 0 0 /base_link /front_laser 20" />
+
+  <node name="rear_laser" pkg="hokuyo_node" type="hokuyo_node">
+    <param name="port" type="string" value="/dev/sensors/hokuyo_H1520031" />
+    <param name="frame_id" type="string" value="rear_laser" />
+    <remap from="scan" to="scan_r" /> <!--amcl will only use front_laser-->
+  </node>
+
+  <node pkg="tf" type="static_transform_publisher" name="rear_laser_frame" args="-0.325 0 0 0 1 0 0 /base_link /rear_laser 20" />
+
+	<!-- map_server wiht pre-recorded map -->
+	<node name="map_server" type="map_server" pkg="map_server"
+		args="$(find navigation_step)/map/map.yaml" />
+
+	<!-- AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl">
+    <rosparam file="$(find youbot_navigation)/config/amcl_params.yaml" command="load" />
+    <!--<remap from="scan" to="/vrep/scan"/>-->
+  </node>
+
+  <!-- move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+      <rosparam file="$(find youbot_navigation)/config/teb/move_base_params.yaml" command="load" />
+      <rosparam file="$(find youbot_navigation)/config/costmap_common_params_2lidar.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find youbot_navigation)/config/costmap_common_params_2lidar.yaml" command="load" ns="local_costmap" />
+      <rosparam file="$(find youbot_navigation)/config/local_costmap_params.yaml" command="load" />
+      <rosparam file="$(find youbot_navigation)/config/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find youbot_navigation)/config/teb/teb_local_planner_params.yaml" command="load" />
+      <rosparam file="$(find youbot_navigation)/config/teb/costmap_converter_params.yaml" command="load" />
+      <rosparam file="$(find youbot_navigation)/config/base_global_planner_params.yaml" command="load" />
+  </node>
+
+	<!-- Rviz
+	<node name="rviz" pkg="rviz" type="rviz"
+		args="-d $(find navigation_step)/rviz/BNT.rviz" /> -->
+
+</launch>

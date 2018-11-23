@@ -16,7 +16,7 @@
   <node name="rear_laser" pkg="hokuyo_node" type="hokuyo_node">
     <param name="port" type="string" value="/dev/sensors/hokuyo_H1520031" />
     <param name="frame_id" type="string" value="rear_laser" />
-    <remap from="scan" to="scan_r" />
+    <remap from="scan" to="scan_r" /> <!--amcl will only use front_laser-->
   </node>
 
   <node pkg="tf" type="static_transform_publisher" name="rear_laser_frame" args="-0.325 0 0 0 1 0 0 /base_link /rear_laser 20" />
