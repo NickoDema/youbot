@@ -24,3 +24,8 @@ Simple navigation on pre-builded map:
 Mapping:
 
     roslaunch youbot_navigation gmapping.launch
+
+
+## Demo
+
+[![](https://img.youtube.com/vi/zKAOW9xSVBE/1.jpg)](https://www.youtube.com/watch?v=zKAOW9xSVBE "")
